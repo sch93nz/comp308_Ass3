@@ -18,7 +18,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include "imageLoader.hpp"
 #include "comp308.hpp"
 
 
@@ -34,7 +34,7 @@ struct triangle {
 
 class Geometry {
 private:
-
+	image *texture;
 	// Feilds for storing raw obj information
 	std::string m_filename;
 	std::vector<comp308::vec3> m_points;	// Point list
@@ -51,7 +51,7 @@ private:
 	void readOBJ(std::string);
 
 	void createNormals();
-
+	void setTexture();
 	void createDisplayListPoly();
 	void createDisplayListWire();
 
