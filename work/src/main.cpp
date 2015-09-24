@@ -50,8 +50,8 @@ float g_zoomFactor = 1.0;
 
 
 // Scene information
-//
-GLuint g_texture = 0;
+////
+//GLuint g_texture = 0;
 GLuint g_texture1 = 0;
 GLuint g_shader = 0;
 bool g_useShader = false;
@@ -88,44 +88,8 @@ void initLight() {
 
 
 
-void initTexture() {
-	
-	glActiveTexture(GL_TEXTURE0); // Use slot 0, need to use GL_TEXTURE1 ... etc if using more than one texture PER OBJECT
-	glGenTextures(1, &g_texture); // Generate texture ID
-	glBindTexture(GL_TEXTURE_2D, g_texture); // Bind it as a 2D texture
-	
-	// Setup sampling strategies
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	// Finnaly, actually fill the data into our texture
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, brick->w, brick->h, brick->glFormat(), GL_UNSIGNED_BYTE, brick->dataPointer());
-
-	//cout << brick->w << endl;
-}
-
-void woodTexture() {
-	
-
-	glActiveTexture(GL_TEXTURE0); // Use slot 0, need to use GL_TEXTURE1 ... etc if using more than one texture PER OBJECT
-	glGenTextures(1, &g_texture); // Generate texture ID
-	glBindTexture(GL_TEXTURE_2D, g_texture); // Bind it as a 2D texture
-
-											 // Setup sampling strategies
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// Finnaly, actually fill the data into our texture
-	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, wood->w, wood->h, wood->glFormat(), GL_UNSIGNED_BYTE, wood->dataPointer());
-
-	//cout << wood->w << endl;
-}
 
 
 
@@ -174,70 +138,39 @@ void draw() {
 	//
 	if (!g_useShader) {
 
-		// Texture setup
-		//
-		initTexture();
-		// Enable Drawing texures
-		glEnable(GL_TEXTURE_2D);
-		// Use Texture as the color
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		// Set the location for binding the texture
-		glActiveTexture(GL_TEXTURE0);
-		// Bind the texture
-		glBindTexture(GL_TEXTURE_2D, g_texture);
 		glPushMatrix();
 		glTranslatef(7.5, 2.5, -7.5);
 		box->renderGeometry();
 		glPopMatrix();
 		
 
-		woodTexture();
-		// Enable Drawing texures
-		glEnable(GL_TEXTURE_2D);
-		// Use Texture as the color
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-		// Set the location for binding the texture
-		glActiveTexture(GL_TEXTURE0);
-		// Bind the texture
-		glBindTexture(GL_TEXTURE_2D, g_texture);
+		
 		glPushMatrix();
 		
 		table->renderGeometry();
 		glPopMatrix();
-		// Render a single square as our geometry
-		// You would normally render your geometry here
-		//glBegin(GL_QUADS);
-		//glNormal3f(0.0, 0.0, 1.0);
-		//glTexCoord2f(0.0, 0.0);
-		//glVertex3f(-5.0, -5.0, 0.0);
-		//glTexCoord2f(0.0, 1.0);
-		//glVertex3f(-5.0, 5.0, 0.0);
-		//glTexCoord2f(1.0, 1.0);
-		//glVertex3f(5.0, 5.0, 0.0);
-		//glTexCoord2f(1.0, 0.0);
-		//glVertex3f(5.0, -5.0, 0.0);
-		//glEnd();
+	
 		glFlush();
 
 	// With shaders (no lighting)
 	//
 	} else {
 
-		// Texture setup
-		//
+		//// Texture setup
+		////
 
-		// Enable Drawing texures
-		glEnable(GL_TEXTURE_2D);
-		// Set the location for binding the texture
-		glActiveTexture(GL_TEXTURE0);
-		// Bind the texture
-		glBindTexture(GL_TEXTURE_2D, g_texture);
+		//// Enable Drawing texures
+		//glEnable(GL_TEXTURE_2D);
+		//// Set the location for binding the texture
+		//glActiveTexture(GL_TEXTURE0);
+		//// Bind the texture
+		//glBindTexture(GL_TEXTURE_2D, g_texture);
 
-		// Use the shader we made
-		glUseProgram(g_shader);
+		//// Use the shader we made
+		//glUseProgram(g_shader);
 
-		// Set our sampler (texture0) to use GL_TEXTURE0 as the source
-		glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
+		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
+		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 		glPushMatrix();
 		glTranslatef(2.5, 2.5,0);
 		box->renderGeometry();
@@ -362,9 +295,8 @@ void mouseMotionCallback(int x, int y) {
 //Main program
 // 
 int main(int argc, char **argv) {
-	brick = new image("./res/textures/brick.jpg");
-	wood = new image("./res/textures/wood.jpg");
 	
+
 
 	if(argc != 1){
 		cout << "No arguments expected" << endl;
@@ -410,7 +342,7 @@ int main(int argc, char **argv) {
 
 	initLight();
 	initShader();
-	initTexture();
+	
 
 	string _table = "./res/assets/table.obj";
 	string _bunny = "./res/assets/bunny.obj";
@@ -420,10 +352,12 @@ int main(int argc, char **argv) {
 	string _torus = "./res/assets/torus.obj";
 	
 	table = new Geometry(_table);
+	table->loadTexture("./res/textures/wood.jpg");
 	bunny = new Geometry(_bunny);
 	teapot = new Geometry(_teapot);
 	ball = new Geometry(_ball);
 	box = new Geometry(_box);
+	box->loadTexture("./res/textures/brick.jpg");
 	torus = new Geometry(_torus);
 
 	// Loop required by GLUT

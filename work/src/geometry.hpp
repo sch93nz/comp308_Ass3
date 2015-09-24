@@ -61,5 +61,5 @@ public:
 
 	void renderGeometry();
 	void toggleWireFrame();
-	
+	void loadTexture(std::string s);
 };

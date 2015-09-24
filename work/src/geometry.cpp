@@ -21,11 +21,15 @@
 #include <vector>
 #include <map>
 
+#include "imageLoader.hpp"
 #include "comp308.hpp"
 #include "geometry.hpp"
 
 using namespace std;
 using namespace comp308;
+
+image *texture;
+GLuint g_texture;
 
 
 Geometry::Geometry(string filename)
@@ -388,7 +392,21 @@ void Geometry::createDisplayListWire()
     glEndList();
     cout << "Finished creating Wire Geometry" << endl;
 }
+void setTexture() {
+	glActiveTexture(GL_TEXTURE0); // Use slot 0, need to use GL_TEXTURE1 ... etc if using more than one texture PER OBJECT
+	glGenTextures(1, &g_texture); // Generate texture ID
+	glBindTexture(GL_TEXTURE_2D, g_texture); // Bind it as a 2D texture
 
+											 // Setup sampling strategies
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	// Finnaly, actually fill the data into our texture
+	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texture->w, texture->h, texture->glFormat(), GL_UNSIGNED_BYTE, texture->dataPointer());
+}
 
 void Geometry::renderGeometry()
 {
@@ -400,10 +418,12 @@ void Geometry::renderGeometry()
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
+		
 
         glShadeModel(GL_SMOOTH);
         //glutWireTeapot(5.0);
         glCallList(m_displayListWire);
+		
 
     }
     else
@@ -414,11 +434,20 @@ void Geometry::renderGeometry()
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-
+		setTexture();
+		// Enable Drawing texures
+		glEnable(GL_TEXTURE_2D);
+		// Use Texture as the color
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		// Set the location for binding the texture
+		glActiveTexture(GL_TEXTURE0);
+		// Bind the texture
+		glBindTexture(GL_TEXTURE_2D, g_texture);
+		glPushMatrix();
         glShadeModel(GL_SMOOTH);
         //glutSolidTeapot(5.0);
         glCallList(m_displayListPoly);
-
+		glPopMatrix();
     }
 }
 
@@ -426,4 +455,10 @@ void Geometry::renderGeometry()
 void Geometry::toggleWireFrame()
 {
     m_wireFrameOn = !m_wireFrameOn;
+}
+
+void Geometry::loadTexture(std::string s)
+{
+	texture = new image(s);
+
 }
