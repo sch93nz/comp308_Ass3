@@ -33,6 +33,7 @@ using namespace comp308;
 
 Geometry::Geometry(string filename)
 {
+	Scale = vec3(1.0, 1.0, 1.0);
     m_filename = filename;
     readOBJ(filename);
     if (m_triangles.size() > 0)
@@ -189,6 +190,9 @@ void Geometry::readOBJ(string filename)
     cout << m_normals.size()-1 << " normals" << endl;
     cout << m_triangles.size() << " faces" << endl;
 
+	/*for (int i = 1; i < m_uvs.size(); i++) {
+		cout << m_uvs[i]<<"\n";
+	}*/
 
     // If we didn't have any normals, create them
     if (m_normals.size() <= 1)
@@ -322,7 +326,6 @@ void Geometry::setTexture()
 	// Finnaly, actually fill the data into our texture
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texture->w, texture->h, texture->glFormat(), GL_UNSIGNED_BYTE, texture->dataPointer());
 
-
 }
 
 
@@ -335,7 +338,11 @@ void Geometry::createDisplayListPoly()
 {
     // Delete old list if there is one
     if (m_displayListPoly) glDeleteLists(m_displayListPoly, 1);
-
+	glPushMatrix();
+	glMatrixMode(GL_TEXTURE);
+	glScalef(Scale.x,Scale.y,Scale.z);
+	
+	
     // Create a new list
     cout << "Creating Poly Geometry" << endl;
     m_displayListPoly = glGenLists(1);
@@ -363,6 +370,8 @@ void Geometry::createDisplayListPoly()
 
         glEnd();
     }
+
+	glPopMatrix();
     // YOUR CODE GOES HERE
     // ...
 
@@ -413,6 +422,12 @@ void Geometry::createDisplayListWire()
     cout << "Finished creating Wire Geometry" << endl;
 }
 
+void Geometry::changeScale(comp308::vec3 s)
+{
+	Scale = s;
+	createDisplayListPoly();
+}
+
 void Geometry::renderGeometry()
 {
     if (m_wireFrameOn)
@@ -449,6 +464,11 @@ void Geometry::renderGeometry()
 		// Bind the texture
 		glBindTexture(GL_TEXTURE_2D, g_texture);
 		glPushMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		
+		glRotatef(Rotation.w, Rotation.x, Rotation.y, Rotation.z);
+		
+		glTranslatef(Translation.x, Translation.y, Translation.z);
         glShadeModel(GL_SMOOTH);
         //glutSolidTeapot(5.0);
         glCallList(m_displayListPoly);
@@ -466,4 +486,15 @@ void Geometry::loadTexture(std::string s)
 {
 	texture = new image(s);
 	setTexture();
+}
+
+void Geometry::rotate(comp308::vec4 r)
+{
+	Rotation = r;
+	createDisplayListPoly();
+}
+
+void Geometry::translate(comp308::vec3 t)
+{
+	Translation = t;
 }

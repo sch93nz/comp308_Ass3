@@ -138,17 +138,14 @@ void draw() {
 	//
 	if (!g_useShader) {
 
-		glPushMatrix();
-		glTranslatef(7.5, 2.5, -7.5);
+	
+		
 		box->renderGeometry();
-		glPopMatrix();
-		
-
-		
-		glPushMatrix();
-		
+		bunny->renderGeometry();
 		table->renderGeometry();
-		glPopMatrix();
+		torus->renderGeometry();
+		ball->renderGeometry();
+		teapot->renderGeometry();
 	
 		glFlush();
 
@@ -353,12 +350,26 @@ int main(int argc, char **argv) {
 	
 	table = new Geometry(_table);
 	table->loadTexture("./res/textures/wood.jpg");
-	//bunny = new Geometry(_bunny);
-	//teapot = new Geometry(_teapot);
-	//ball = new Geometry(_ball);
+	table->changeScale(vec3(1.2, 1.2, 1.2));
+	
+	bunny = new Geometry(_bunny);
+	bunny->translate(vec3(0, 0.5, 0));
+	//bunny->rotate(vec4(0, 1, 0, 180));
+
+	teapot = new Geometry(_teapot);
+	teapot->translate(vec3(-5.5, 0.45, -5.5));
+
+	ball = new Geometry(_ball);
+	ball->translate(vec3(-5.5, 2, 5.5));
+
 	box = new Geometry(_box);
 	box->loadTexture("./res/textures/brick.jpg");
-	//torus = new Geometry(_torus);
+	box->changeScale(vec3(2, 2, 2));
+	box->rotate(vec4(0, 1, 0, 180));
+	box->translate(vec3(-5.5, 2.5, 5.5));
+	
+	torus = new Geometry(_torus);
+	torus->translate(vec3(5.5, 1.05, 5.5));
 
 	// Loop required by GLUT
 	// This will not return until we tell GLUT to finish

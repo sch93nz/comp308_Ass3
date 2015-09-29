@@ -35,6 +35,9 @@ struct triangle {
 class Geometry {
 private:
 	image *texture;
+	comp308::vec3 Scale;
+	comp308::vec4 Rotation;
+	comp308::vec3 Translation;
 
 	GLuint g_texture;
 	// Feilds for storing raw obj information
@@ -60,8 +63,10 @@ private:
 public:
 	Geometry(std::string);
 	// ~GeometryManager();
-
+	void changeScale(comp308::vec3 s);
 	void renderGeometry();
 	void toggleWireFrame();
 	void loadTexture(std::string s);
+	void rotate(comp308::vec4 r);
+	void translate(comp308::vec3 t);
 };
