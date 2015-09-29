@@ -35,6 +35,8 @@ struct triangle {
 class Geometry {
 private:
 	image *texture;
+
+	GLuint g_texture;
 	// Feilds for storing raw obj information
 	std::string m_filename;
 	std::vector<comp308::vec3> m_points;	// Point list

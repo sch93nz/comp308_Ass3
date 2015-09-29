@@ -353,12 +353,12 @@ int main(int argc, char **argv) {
 	
 	table = new Geometry(_table);
 	table->loadTexture("./res/textures/wood.jpg");
-	bunny = new Geometry(_bunny);
-	teapot = new Geometry(_teapot);
-	ball = new Geometry(_ball);
+	//bunny = new Geometry(_bunny);
+	//teapot = new Geometry(_teapot);
+	//ball = new Geometry(_ball);
 	box = new Geometry(_box);
 	box->loadTexture("./res/textures/brick.jpg");
-	torus = new Geometry(_torus);
+	//torus = new Geometry(_torus);
 
 	// Loop required by GLUT
 	// This will not return until we tell GLUT to finish

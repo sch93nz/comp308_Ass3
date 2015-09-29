@@ -29,7 +29,6 @@ using namespace std;
 using namespace comp308;
 
 
-GLuint g_texture;
 
 
 Geometry::Geometry(string filename)
@@ -318,8 +317,12 @@ void Geometry::setTexture()
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->w, texture->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->dataPointer());
 	// Finnaly, actually fill the data into our texture
 	gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texture->w, texture->h, texture->glFormat(), GL_UNSIGNED_BYTE, texture->dataPointer());
+
+
 }
 
 
@@ -338,7 +341,7 @@ void Geometry::createDisplayListPoly()
     m_displayListPoly = glGenLists(1);
     glNewList(m_displayListPoly, GL_COMPILE);
     unsigned int i ;
-    for(i =1; i<m_triangles.size()-1; i++)
+    for(i =1; i<m_triangles.size(); i++)
     {
         glBegin(GL_TRIANGLES);
 
@@ -436,7 +439,7 @@ void Geometry::renderGeometry()
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-		setTexture();
+		
 		// Enable Drawing texures
 		glEnable(GL_TEXTURE_2D);
 		// Use Texture as the color
@@ -462,5 +465,5 @@ void Geometry::toggleWireFrame()
 void Geometry::loadTexture(std::string s)
 {
 	texture = new image(s);
-
+	setTexture();
 }
