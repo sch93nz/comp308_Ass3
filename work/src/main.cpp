@@ -80,8 +80,20 @@ void initLight() {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
 	glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
 
+	float position[] = { 0.0f,0.0f,10.0f,1.0f };
+	float spotDirection[] = { 0.0f, 0.0f, -1.0f};
 
-	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT1, GL_POSITION, position);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffintensity);
+	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
+	const GLfloat angle = 10;
+	glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF, &angle);
+	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100.0f);
+
+
+	glEnable(GL_LIGHT1);
+	//glEnable(GL_LIGHT0);
 }
 
 
@@ -92,7 +104,7 @@ void initLight() {
 
 
 void initShader() {
-	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
+	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
 }
 
 
@@ -349,15 +361,15 @@ int main(int argc, char **argv) {
 	initShader();
 
 
-	string _table = "work/res/assets/table.obj";
-	string _bunny = "work/res/assets/bunny.obj";
-	string _teapot = "work/res/assets/teapot.obj";
-	string _ball = "work/res/assets/sphere.obj";
-	string _box = "work/res/assets/box.obj";
-	string _torus = "work/res/assets/torus.obj";
+	string _table = "./res/assets/table.obj";
+	string _bunny = "./res/assets/bunny.obj";
+	string _teapot = "./res/assets/teapot.obj";
+	string _ball = "./res/assets/sphere.obj";
+	string _box = "./res/assets/box.obj";
+	string _torus = "./res/assets/torus.obj";
 
 	table = new Geometry(_table);
-	table->loadTexture("work/res/textures/wood.jpg");
+	table->loadTexture("./res/textures/wood.jpg");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 
 	bunny = new Geometry(_bunny);
@@ -384,7 +396,7 @@ int main(int argc, char **argv) {
 	ball->setShine(0.2);
 
 	box = new Geometry(_box);
-	box->loadTexture("work/res/textures/brick.jpg");
+	box->loadTexture("./res/textures/brick.jpg");
 	box->changeScale(vec3(2, 2, 2));
 	box->rotate(vec4(0, 1, 0, 180));
 	box->translate(vec3(-5.5, 2.5, 5.5));
