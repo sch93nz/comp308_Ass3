@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Taehyun Rhee, Joshua Scott, Ben Allen
 //
 // This software is provided 'as-is' for assignment of COMP308 in ECS,
-// Victoria University of Wellington, without any express or implied warranty. 
+// Victoria University of Wellington, without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
 // the use of this software.
 //
@@ -27,14 +27,14 @@ using namespace comp308;
 
 
 // Global variables
-// 
+//
 GLuint g_winWidth  = 640;
 GLuint g_winHeight = 480;
 GLuint g_mainWindow = 0;
 
 
 // Projection values
-// 
+//
 float g_fovy = 20.0;
 float g_znear = 0.1;
 float g_zfar = 1000.0;
@@ -61,18 +61,16 @@ bool g_useShader = false;
 //
 Geometry *ball;
 Geometry *box;
-image *brick;
 Geometry *bunny;
 Geometry *sphere;
 Geometry *table;
-image *wood;
 Geometry *teapot;
 Geometry *torus;
 
 
 // Sets up where and what the light is
 // Called once on start up
-// 
+//
 void initLight() {
 	float direction[]	  = {0.0f, 0.0f, 1.0f, 0.0f};
 	float diffintensity[] = {0.7f, 0.7f, 0.7f, 1.0f};
@@ -80,9 +78,9 @@ void initLight() {
 
 	glLightfv(GL_LIGHT0, GL_POSITION, direction);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
-	glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);	
-	
-	
+	glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
+
+
 	glEnable(GL_LIGHT0);
 }
 
@@ -94,13 +92,13 @@ void initLight() {
 
 
 void initShader() {
-	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
 }
 
 
 // Sets up where the camera is in the scene
 // Called every frame
-// 
+//
 void setUpCamera() {
 	// Set up the projection matrix
 	glMatrixMode(GL_PROJECTION);
@@ -138,15 +136,25 @@ void draw() {
 	//
 	if (!g_useShader) {
 
-	
-		
+
+	glPushMatrix();
 		box->renderGeometry();
+			glPopMatrix();
+			glPushMatrix();
 		bunny->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
 		table->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
 		torus->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
 		ball->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
 		teapot->renderGeometry();
-	
+        glPopMatrix();
 		glFlush();
 
 	// With shaders (no lighting)
@@ -209,15 +217,15 @@ void draw() {
 
 
 // Reshape function
-// 
+//
 void reshape(int w, int h) {
     if (h == 0) h = 1;
 
 	g_winWidth = w;
 	g_winHeight = h;
-    
+
     // Sets the openGL rendering window to match the window size
-    glViewport(0, 0, g_winWidth, g_winHeight);  
+    glViewport(0, 0, g_winWidth, g_winHeight);
 }
 
 
@@ -243,7 +251,7 @@ void specialCallback(int key, int x, int y) {
 
 // Mouse Button Callback function
 // Called once per button state change
-// 
+//
 void mouseCallback(int button, int state, int x, int y) {
 	cout << "Mouse Callback :: button=" << button << ", state=" << state << ", x,y=(" << x << "," << y << ")" << endl;
 	// YOUR CODE GOES HERE
@@ -274,7 +282,7 @@ void mouseCallback(int button, int state, int x, int y) {
 // Mouse Motion Callback function
 // Called once per frame if the mouse has moved and
 // at least one mouse button has an active state
-// 
+//
 void mouseMotionCallback(int x, int y) {
 	cout << "Mouse Motion Callback :: x,y=(" << x << "," << y << ")" << endl;
 	// YOUR CODE GOES HERE
@@ -290,9 +298,9 @@ void mouseMotionCallback(int x, int y) {
 
 
 //Main program
-// 
+//
 int main(int argc, char **argv) {
-	
+
 
 
 	if(argc != 1){
@@ -330,7 +338,7 @@ int main(int argc, char **argv) {
 	// Register functions for callback
 	glutDisplayFunc(draw);
 	glutReshapeFunc(reshape);
-	
+
 	glutKeyboardFunc(keyboardCallback);
 	glutSpecialFunc(specialCallback);
 
@@ -339,41 +347,65 @@ int main(int argc, char **argv) {
 
 	initLight();
 	initShader();
-	
 
-	string _table = "./res/assets/table.obj";
-	string _bunny = "./res/assets/bunny.obj";
-	string _teapot = "./res/assets/teapot.obj";
-	string _ball = "./res/assets/sphere.obj";
-	string _box = "./res/assets/box.obj";
-	string _torus = "./res/assets/torus.obj";
-	
+
+	string _table = "work/res/assets/table.obj";
+	string _bunny = "work/res/assets/bunny.obj";
+	string _teapot = "work/res/assets/teapot.obj";
+	string _ball = "work/res/assets/sphere.obj";
+	string _box = "work/res/assets/box.obj";
+	string _torus = "work/res/assets/torus.obj";
+
 	table = new Geometry(_table);
-	table->loadTexture("./res/textures/wood.jpg");
+	table->loadTexture("work/res/textures/wood.jpg");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
-	
+
 	bunny = new Geometry(_bunny);
 	bunny->translate(vec3(0, 0.5, 0));
+	bunny->setAmbient(vec3(0.25,0.20725,0.20725));
+	bunny->setDiffuse(vec3(1,0.829,0.829));
+	bunny->setSpecular(vec3(0.296648,0.296648,0.296648));
+	bunny->setShine(0.088);
+
 	//bunny->rotate(vec4(0, 1, 0, 180));
 
 	teapot = new Geometry(_teapot);
 	teapot->translate(vec3(-5.5, 0.45, -5.5));
+    teapot->setAmbient(vec3(0.054,0.127,0.2125));
+    teapot->setDiffuse(vec3(0.18144,0.4284,0.714));
+    teapot->setSpecular(vec3(0.166721,0.271906,0.393548));
+    teapot->setShine(0.2);
 
 	ball = new Geometry(_ball);
 	ball->translate(vec3(-5.5, 2, 5.5));
+	ball->setAmbient(vec3(0.2125,0.1275,0.054));
+	ball->setDiffuse(vec3(0.714,0.4284,0.18144));
+	ball->setSpecular(vec3(0.393548,0.271906,0.166721));
+	ball->setShine(0.2);
 
 	box = new Geometry(_box);
-	box->loadTexture("./res/textures/brick.jpg");
+	box->loadTexture("work/res/textures/brick.jpg");
 	box->changeScale(vec3(2, 2, 2));
 	box->rotate(vec4(0, 1, 0, 180));
 	box->translate(vec3(-5.5, 2.5, 5.5));
-	
+
 	torus = new Geometry(_torus);
 	torus->translate(vec3(5.5, 1.05, 5.5));
-
+	torus->setAmbient(vec3(0.0,0.0,0.0));
+	torus->setDiffuse(vec3(0.5,0.0,0.0));
+	torus->setSpecular(vec3(0.7,0.6,0.6));
+	torus->setShine(0.25);
 	// Loop required by GLUT
 	// This will not return until we tell GLUT to finish
 	glutMainLoop();
+
+	  delete table;
+	  delete bunny;
+	  delete teapot;
+	  delete box;
+	  delete torus;
+
+
 
 	// Don't forget to delete all pointers that we made
 	return 0;

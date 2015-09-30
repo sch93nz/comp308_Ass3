@@ -3,7 +3,7 @@
 // Copyright (c) 2015 Taehyun Rhee, Joshua Scott, Ben Allen
 //
 // This software is provided 'as-is' for assignment of COMP308 in ECS,
-// Victoria University of Wellington, without any express or implied warranty. 
+// Victoria University of Wellington, without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from
 // the use of this software.
 //
@@ -34,10 +34,15 @@ struct triangle {
 
 class Geometry {
 private:
-	image *texture;
+	image *texture = nullptr;
 	comp308::vec3 Scale;
 	comp308::vec4 Rotation;
 	comp308::vec3 Translation;
+
+	float mat_ambient[3];
+	float mat_diffuse[3];
+	float mat_specular[3];
+	float shine = 0.0f;
 
 	GLuint g_texture;
 	// Feilds for storing raw obj information
@@ -69,4 +74,8 @@ public:
 	void loadTexture(std::string s);
 	void rotate(comp308::vec4 r);
 	void translate(comp308::vec3 t);
+	void setAmbient(comp308::vec3 a);
+	void setDiffuse(comp308::vec3 d);
+	void setSpecular(comp308::vec3 s);
+	void setShine(float s);
 };

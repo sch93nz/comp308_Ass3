@@ -34,6 +34,18 @@ using namespace comp308;
 Geometry::Geometry(string filename)
 {
 	Scale = vec3(1.0, 1.0, 1.0);
+	mat_ambient[0]=0;
+	mat_ambient[1]=0;
+	mat_ambient[2]=0;
+
+	mat_diffuse[0]=0;
+	mat_diffuse[1]=0;
+	mat_diffuse[2]=0;
+
+	mat_specular[0]=0;
+	mat_specular[1]=0;
+	mat_specular[2]=0;
+
     m_filename = filename;
     readOBJ(filename);
     if (m_triangles.size() > 0)
@@ -341,8 +353,8 @@ void Geometry::createDisplayListPoly()
 	glPushMatrix();
 	glMatrixMode(GL_TEXTURE);
 	glScalef(Scale.x,Scale.y,Scale.z);
-	
-	
+
+
     // Create a new list
     cout << "Creating Poly Geometry" << endl;
     m_displayListPoly = glGenLists(1);
@@ -438,23 +450,23 @@ void Geometry::renderGeometry()
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-		
+
 
         glShadeModel(GL_SMOOTH);
         //glutWireTeapot(5.0);
         glCallList(m_displayListWire);
-		
+
 
     }
     else
     {
-
+        if(texture!=nullptr){
         //-------------------------------------------------------------
         // [Assignment 1] :
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-		
+		glPushMatrix();
 		// Enable Drawing texures
 		glEnable(GL_TEXTURE_2D);
 		// Use Texture as the color
@@ -462,16 +474,32 @@ void Geometry::renderGeometry()
 		// Set the location for binding the texture
 		glActiveTexture(GL_TEXTURE0);
 		// Bind the texture
-		glBindTexture(GL_TEXTURE_2D, g_texture);
-		glPushMatrix();
+
+        glBindTexture(GL_TEXTURE_2D, g_texture);
+
+		}
+		else {
+		  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+		  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+		  glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
+
+		}
+
 		glMatrixMode(GL_MODELVIEW);
-		
+
 		glRotatef(Rotation.w, Rotation.x, Rotation.y, Rotation.z);
-		
+
 		glTranslatef(Translation.x, Translation.y, Translation.z);
-        glShadeModel(GL_SMOOTH);
-        //glutSolidTeapot(5.0);
-        glCallList(m_displayListPoly);
+		glShadeModel(GL_SMOOTH);
+
+
+		//glutSolidTeapot(5.0);
+		glCallList(m_displayListPoly);
+
+         if(texture!=nullptr){
+        glDisable(GL_TEXTURE_2D);
+        }
 		glPopMatrix();
     }
 }
@@ -498,3 +526,26 @@ void Geometry::translate(comp308::vec3 t)
 {
 	Translation = t;
 }
+
+void Geometry::setAmbient(comp308::vec3 a){
+  mat_ambient[0]=a.x;
+  mat_ambient[1]=a.y;
+  mat_ambient[2]=a.z;
+}
+
+void Geometry::setDiffuse(comp308::vec3 d){
+  mat_diffuse[0] = d.x;
+  mat_diffuse[1] = d.y;
+  mat_diffuse[2] = d.z;
+}
+
+void Geometry::setSpecular(comp308::vec3 s){
+  mat_specular[0] = s.x;
+  mat_specular[1] = s.y;
+  mat_specular[2] = s.z;
+}
+
+void Geometry::setShine(float s){
+ shine =s ;
+}
+
