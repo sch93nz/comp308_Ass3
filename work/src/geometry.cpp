@@ -360,7 +360,7 @@ void Geometry::createDisplayListPoly()
     m_displayListPoly = glGenLists(1);
     glNewList(m_displayListPoly, GL_COMPILE);
     unsigned int i ;
-    for(i =1; i<m_triangles.size(); i++)
+    for(i =0; i<m_triangles.size(); i++)
     {
         glBegin(GL_TRIANGLES);
 

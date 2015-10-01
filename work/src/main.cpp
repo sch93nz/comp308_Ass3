@@ -72,28 +72,41 @@ Geometry *torus;
 // Called once on start up
 //
 void initLight() {
-	float direction[]	  = {0.0f, 0.0f, 1.0f, 0.0f};
-	float diffintensity[] = {0.7f, 0.7f, 0.7f, 1.0f};
-	float ambient[]       = {0.2f, 0.2f, 0.2f, 1.0f};
-
-	glLightfv(GL_LIGHT0, GL_POSITION, direction);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
-	glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
-
-	float position[] = { 0.0f,0.0f,10.0f,1.0f };
-	float spotDirection[] = { 0.0f, 0.0f, -1.0f};
-
-	glLightfv(GL_LIGHT1, GL_POSITION, position);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffintensity);
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-	const GLfloat angle = 10;
-	glLightfv(GL_LIGHT1, GL_SPOT_CUTOFF, &angle);
-	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 100.0f);
 
 
-	glEnable(GL_LIGHT1);
-	//glEnable(GL_LIGHT0);
+    float direction[]	  = {0.0f, 0.0f, 1.0f, 0.0f};
+    float diffintensity[] = {0.7f, 0.7f, 0.7f, 1.0f};
+    float ambient[]       = {0.2f, 0.2f, 0.2f, 1.0f};
+
+    glLightfv(GL_LIGHT0, GL_POSITION, direction);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
+
+    GLfloat  lightPos[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+    GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat  ambientLight[] = { 0.5f, 0.5f, 0.5f, 1.0f};
+    GLfloat  spotDir[] = { 0.0f, 0.0f, -1.0f };
+
+    //glLightfv(GL_LIGHT1,GL_DIFFUSE,ambientLight);
+    glLightfv(GL_LIGHT1,GL_SPECULAR,specular);
+    glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
+
+    // Specific spot effects
+    // Cut off angle is 60 degrees
+    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,60.0f);
+
+    // Fairly shiny spot
+    glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,100.0f);
+
+    // Enable this light in particular
+    glEnable(GL_LIGHT1);
+
+
+
+
+
+    //glEnable(GL_LIGHT0);
 }
 
 
@@ -104,7 +117,7 @@ void initLight() {
 
 
 void initShader() {
-	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
 }
 
 
@@ -189,9 +202,24 @@ void draw() {
 		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
 		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 		glPushMatrix();
-		glTranslatef(2.5, 2.5,0);
 		box->renderGeometry();
+			glPopMatrix();
+			glPushMatrix();
+		bunny->renderGeometry();
 		glPopMatrix();
+			glPushMatrix();
+		table->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
+		torus->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
+		ball->renderGeometry();
+		glPopMatrix();
+			glPushMatrix();
+		teapot->renderGeometry();
+        glPopMatrix();
+		glFlush();
 
 		//// Render a single square as our geometry
 		//// You would normally render your geometry here
@@ -361,15 +389,15 @@ int main(int argc, char **argv) {
 	initShader();
 
 
-	string _table = "./res/assets/table.obj";
-	string _bunny = "./res/assets/bunny.obj";
-	string _teapot = "./res/assets/teapot.obj";
-	string _ball = "./res/assets/sphere.obj";
-	string _box = "./res/assets/box.obj";
-	string _torus = "./res/assets/torus.obj";
+	string _table = "work/res/assets/table.obj";
+	string _bunny = "work/res/assets/bunny.obj";
+	string _teapot = "work/res/assets/teapot.obj";
+	string _ball = "work/res/assets/sphere.obj";
+	string _box = "work/res/assets/box.obj";
+	string _torus = "work/res/assets/torus.obj";
 
 	table = new Geometry(_table);
-	table->loadTexture("./res/textures/wood.jpg");
+	table->loadTexture("work/res/textures/wood.jpg");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 
 	bunny = new Geometry(_bunny);
@@ -382,7 +410,7 @@ int main(int argc, char **argv) {
 	//bunny->rotate(vec4(0, 1, 0, 180));
 
 	teapot = new Geometry(_teapot);
-	teapot->translate(vec3(-5.5, 0.45, -5.5));
+	teapot->translate(vec3(-5.5, 0.5, -5.5));
     teapot->setAmbient(vec3(0.054,0.127,0.2125));
     teapot->setDiffuse(vec3(0.18144,0.4284,0.714));
     teapot->setSpecular(vec3(0.166721,0.271906,0.393548));
@@ -396,7 +424,7 @@ int main(int argc, char **argv) {
 	ball->setShine(0.2);
 
 	box = new Geometry(_box);
-	box->loadTexture("./res/textures/brick.jpg");
+	box->loadTexture("work/res/textures/brick.jpg");
 	box->changeScale(vec3(2, 2, 2));
 	box->rotate(vec4(0, 1, 0, 180));
 	box->translate(vec3(-5.5, 2.5, 5.5));
