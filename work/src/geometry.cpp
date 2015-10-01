@@ -34,17 +34,17 @@ using namespace comp308;
 Geometry::Geometry(string filename)
 {
 	Scale = vec3(1.0, 1.0, 1.0);
-	mat_ambient[0]=0;
-	mat_ambient[1]=0;
-	mat_ambient[2]=0;
+	mat_ambient[0]=1;
+	mat_ambient[1]=1;
+	mat_ambient[2]=1;
 
-	mat_diffuse[0]=0;
-	mat_diffuse[1]=0;
-	mat_diffuse[2]=0;
+	mat_diffuse[0]=1;
+	mat_diffuse[1]=1;
+	mat_diffuse[2]=1;
 
-	mat_specular[0]=0;
-	mat_specular[1]=0;
-	mat_specular[2]=0;
+	mat_specular[0]=1;
+	mat_specular[1]=1;
+	mat_specular[2]=1;
 
     m_filename = filename;
     readOBJ(filename);
@@ -460,7 +460,7 @@ void Geometry::renderGeometry()
     }
     else
     {
-        if(texture!=nullptr){
+       
         //-------------------------------------------------------------
         // [Assignment 1] :
         // When moving on to displaying your obj, comment out the
@@ -477,14 +477,13 @@ void Geometry::renderGeometry()
 
         glBindTexture(GL_TEXTURE_2D, g_texture);
 
-		}
-		else {
+		
 		  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 		  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 		  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 		  glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
 
-		}
+		
 
 		glMatrixMode(GL_MODELVIEW);
 

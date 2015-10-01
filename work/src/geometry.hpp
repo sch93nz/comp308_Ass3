@@ -42,7 +42,7 @@ private:
 	float mat_ambient[3];
 	float mat_diffuse[3];
 	float mat_specular[3];
-	float shine = 0.0f;
+	float shine = 1.0f;
 
 	GLuint g_texture;
 	// Feilds for storing raw obj information

@@ -75,38 +75,36 @@ void initLight() {
 
 
     float direction[]	  = {0.0f, 0.0f, 1.0f, 0.0f};
-    float diffintensity[] = {0.7f, 0.7f, 0.7f, 1.0f};
-    float ambient[]       = {0.2f, 0.2f, 0.2f, 1.0f};
+    float diffintensity[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    float ambient[]       = {0.1f, 0.1f, 0.1f, 1.0f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, direction);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
     glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
 
-    GLfloat  lightPos[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-    GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat  specref[] =  { 1.0f, 1.0f, 1.0f, 1.0f };
-    GLfloat  ambientLight[] = { 0.5f, 0.5f, 0.5f, 1.0f};
-    GLfloat  spotDir[] = { 0.0f, 0.0f, -1.0f };
+    GLfloat  lightPos[] = { 0.0f, 5.0f, 0.0f, 0.0f };
+    GLfloat  specular[] = { 1.0f, 1.0f, 10.0f, 1.0f};
+    GLfloat  specref[] =  { 0.1f, 0.1f, 1.0f, 1.0f };
+    GLfloat  ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat  spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
+	GLfloat spotDiffintensity[] = { 0.0f,0.0f,1.0f,1.0f };
 
-    //glLightfv(GL_LIGHT1,GL_DIFFUSE,ambientLight);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT1,GL_DIFFUSE, spotDiffintensity);
     glLightfv(GL_LIGHT1,GL_SPECULAR,specular);
     glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
-
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
     // Specific spot effects
     // Cut off angle is 60 degrees
-    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,60.0f);
+    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,30.0f);
 
     // Fairly shiny spot
     glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,100.0f);
-
+	
     // Enable this light in particular
-    glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT1); //Strong Spot
 
-
-
-
-
-    //glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0); // Weak Ambent
 }
 
 
@@ -117,7 +115,7 @@ void initLight() {
 
 
 void initShader() {
-	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
+	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
 }
 
 
@@ -389,19 +387,24 @@ int main(int argc, char **argv) {
 	initShader();
 
 
-	string _table = "work/res/assets/table.obj";
-	string _bunny = "work/res/assets/bunny.obj";
-	string _teapot = "work/res/assets/teapot.obj";
-	string _ball = "work/res/assets/sphere.obj";
-	string _box = "work/res/assets/box.obj";
-	string _torus = "work/res/assets/torus.obj";
+	string _table = "./res/assets/table.obj";
+	string _bunny = "./res/assets/bunny.obj";
+	string _teapot = "./res/assets/teapot.obj";
+	string _ball = "./res/assets/sphere.obj";
+	string _box = "./res/assets/box.obj";
+	string _torus = "./res/assets/torus.obj";
 
 	table = new Geometry(_table);
-	table->loadTexture("work/res/textures/wood.jpg");
+	table->loadTexture("./res/textures/wood.jpg");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
-
+	table->translate(vec3(0, 0.4, 0));
+	table->setAmbient(vec3(0.21, 0.1275, 0.054));
+	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
+	table->setSpecular(vec3(0.393548,0.271906,0.166721));
+	table->setShine(0.78125f);
+	
 	bunny = new Geometry(_bunny);
-	bunny->translate(vec3(0, 0.5, 0));
+	bunny->translate(vec3(0, 0.95, 0));
 	bunny->setAmbient(vec3(0.25,0.20725,0.20725));
 	bunny->setDiffuse(vec3(1,0.829,0.829));
 	bunny->setSpecular(vec3(0.296648,0.296648,0.296648));
@@ -410,27 +413,27 @@ int main(int argc, char **argv) {
 	//bunny->rotate(vec4(0, 1, 0, 180));
 
 	teapot = new Geometry(_teapot);
-	teapot->translate(vec3(-5.5, 0.5, -5.5));
+	teapot->translate(vec3(-5.5, 0.9, -5.5));
     teapot->setAmbient(vec3(0.054,0.127,0.2125));
     teapot->setDiffuse(vec3(0.18144,0.4284,0.714));
     teapot->setSpecular(vec3(0.166721,0.271906,0.393548));
     teapot->setShine(0.2);
 
 	ball = new Geometry(_ball);
-	ball->translate(vec3(-5.5, 2, 5.5));
+	ball->translate(vec3(-5.5, 2.3, 5.5));
 	ball->setAmbient(vec3(0.2125,0.1275,0.054));
 	ball->setDiffuse(vec3(0.714,0.4284,0.18144));
 	ball->setSpecular(vec3(0.393548,0.271906,0.166721));
 	ball->setShine(0.2);
 
 	box = new Geometry(_box);
-	box->loadTexture("work/res/textures/brick.jpg");
+	box->loadTexture("./res/textures/brick.jpg");
 	box->changeScale(vec3(2, 2, 2));
 	box->rotate(vec4(0, 1, 0, 180));
-	box->translate(vec3(-5.5, 2.5, 5.5));
+	box->translate(vec3(-5.5, 2.9, 5.5));
 
 	torus = new Geometry(_torus);
-	torus->translate(vec3(5.5, 1.05, 5.5));
+	torus->translate(vec3(5.5, 1.4, 5.5));
 	torus->setAmbient(vec3(0.0,0.0,0.0));
 	torus->setDiffuse(vec3(0.5,0.0,0.0));
 	torus->setSpecular(vec3(0.7,0.6,0.6));
