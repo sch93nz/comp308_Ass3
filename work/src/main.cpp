@@ -67,6 +67,7 @@ Geometry *table;
 Geometry *teapot;
 Geometry *torus;
 
+bool light0, light1, light2, light3;
 
 // Sets up where and what the light is
 // Called once on start up
@@ -74,14 +75,15 @@ Geometry *torus;
 void initLight() {
 
 
-    float direction[]	  = {0.0f, 0.0f, 1.0f, 0.0f};
-    float diffintensity[] = {0.5f, 0.5f, 0.5f, 1.0f};
-    float ambient[]       = {0.1f, 0.1f, 0.1f, 1.0f};
+    float direction[]	  = {4.0f, 5.0f, 0.0f, 0.0f};
+    float diffintensity[] = {0.1f, 0.4f, 0.1f, 1.0f};
+    float ambient[]       = {0.05f, 0.1f, 0.05f, 1.0f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, direction);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
     glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
 
+	
     GLfloat  lightPos[] = { 0.0f, 5.0f, 0.0f, 0.0f };
     GLfloat  specular[] = { 1.0f, 1.0f, 10.0f, 1.0f};
     GLfloat  specref[] =  { 0.1f, 0.1f, 1.0f, 1.0f };
@@ -101,10 +103,34 @@ void initLight() {
     // Fairly shiny spot
     glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,100.0f);
 	
-    // Enable this light in particular
-    glEnable(GL_LIGHT1); //Strong Spot
+	float diffintensity2[] = { 0.4f, 0.2f, 0.2f, 1.0f };
+	float ambient2[] = { 0.2f, 0.1f, 0.1f, 1.0f };
+	float direction2[] = { -10.0f, 2.5f,0.0f, 1.0f };
 
-    glEnable(GL_LIGHT0); // Weak Ambent
+	glLightfv(GL_LIGHT2, GL_POSITION, direction2);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffintensity2);
+	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient2);
+
+	float diffintensity3[] = { 0.15f, 0.15f, 0.15f, 1.0f };
+	float ambient3[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, diffintensity3);
+	glLightfv(GL_LIGHT3, GL_AMBIENT, ambient3);
+
+
+    // Enable this light in particular
+   
+    glEnable(GL_LIGHT0); // Weak point
+	light0 = true;
+	
+	glEnable(GL_LIGHT1); //Strong Spot
+	light1 = true;
+
+	glEnable(GL_LIGHT2);//direction light
+	light2 = true;
+
+	glEnable(GL_LIGHT3); //soft ambo light
+	light3 = true;
 }
 
 
@@ -195,10 +221,10 @@ void draw() {
 		//glBindTexture(GL_TEXTURE_2D, g_texture);
 
 		//// Use the shader we made
-		//glUseProgram(g_shader);
+		glUseProgram(g_shader);
 
 		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
-		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
+		glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 		glPushMatrix();
 		box->renderGeometry();
 			glPopMatrix();
@@ -272,6 +298,46 @@ void reshape(int w, int h) {
 //
 void keyboardCallback(unsigned char key, int x, int y) {
 	cout << "Keyboard Callback :: key=" << key << ", x,y=(" << x << "," << y << ")" << endl;
+	if (key == '1') {
+		if (light0) {
+			glDisable(GL_LIGHT0);
+			light0 = false;
+		}
+		else {
+			glEnable(GL_LIGHT0);
+			light0 = true;
+		}
+	}
+	else if (key == '2') {
+		if (light1) {
+			glDisable(GL_LIGHT1);
+			light1 = false;
+		}
+		else {
+			glEnable(GL_LIGHT1);
+			light1 = true;
+		}
+	}
+	else if (key == '3') {
+		if (light2) {
+			glDisable(GL_LIGHT2);
+			light2 = false;
+		}
+		else {
+			glEnable(GL_LIGHT2);
+			light2 = true;
+		}
+	}
+	else if (key == '4') {
+		if (light3) {
+			glDisable(GL_LIGHT3);
+			light3 = false;
+		}
+		else {
+			glEnable(GL_LIGHT3);
+			light3 = true;
+		}
+	}
 	// YOUR CODE GOES HERE
 	// ...
 }
