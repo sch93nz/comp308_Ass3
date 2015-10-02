@@ -18,8 +18,8 @@
 #include <string>
 
 #include "comp308.hpp"
-#include "imageLoader.hpp"
-#include "shaderLoader.hpp"
+//#include "imageLoader.hpp"
+
 #include "geometry.hpp"
 
 using namespace std;
@@ -156,9 +156,6 @@ void initLight() {
     
 }
 
-void initShader() {
-	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
-}
 
 
 // Sets up where the camera is in the scene
@@ -222,28 +219,28 @@ void draw() {
 
 
 		glPushMatrix();
-		bunny->renderGeometry();
+		bunny->renderGeometry(false);
 		glPopMatrix();
 
 
 		glPushMatrix();
-		torus->renderGeometry();
+		torus->renderGeometry(false);
 		glPopMatrix();
 
 		glPushMatrix();
-		ball->renderGeometry();
+		ball->renderGeometry(false);
 		glPopMatrix();
 
         glPushMatrix();
-		teapot->renderGeometry();
+		teapot->renderGeometry(false);
         glPopMatrix();
 
         glPushMatrix();
-		table->renderGeometry();
+		table->renderGeometry(false);
 		glPopMatrix();
 
         glPushMatrix();
-		box->renderGeometry();
+		box->renderGeometry(false);
 		glPopMatrix();
 
 
@@ -262,36 +259,36 @@ void draw() {
 		//glActiveTexture(GL_TEXTURE0);
 		//// Bind the texture
 		//glBindTexture(GL_TEXTURE_2D, g_texture);
-        glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
+       // glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 		//// Use the shader we made
-		glUseProgram(g_shader);
+		//glUseProgram(g_shader);
 
 		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
-		glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
+		//glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
 
         glPushMatrix();
-		table->renderGeometry();
+		table->renderGeometry(true);
 		glPopMatrix();
 
 		glPushMatrix();
-		box->renderGeometry();
+		box->renderGeometry(true);
 		glPopMatrix();
 
 		glPushMatrix();
-		bunny->renderGeometry();
+		bunny->renderGeometry(true);
 		glPopMatrix();
 
 
 		glPushMatrix();
-		torus->renderGeometry();
+		torus->renderGeometry(true);
 		glPopMatrix();
 
 		glPushMatrix();
-		ball->renderGeometry();
+		ball->renderGeometry(true);
 		glPopMatrix();
 
 		glPushMatrix();
-		teapot->renderGeometry();
+		teapot->renderGeometry(true);
         glPopMatrix();
 
 		glFlush();
@@ -558,15 +555,15 @@ int main(int argc, char **argv) {
 	glutMotionFunc(mouseMotionCallback);
 
 	initLight();
-	initShader();
+	//initShader();
 
 
-	string _table = "work/res/assets/table.obj";
-	string _bunny = "work/res/assets/bunny.obj";
-	string _teapot = "work/res/assets/teapot.obj";
-	string _ball = "work/res/assets/sphere.obj";
-	string _box = "work/res/assets/box.obj";
-	string _torus = "work/res/assets/torus.obj";
+	string _table = "./res/assets/table.obj";
+	string _bunny = "./res/assets/bunny.obj";
+	string _teapot = "./res/assets/teapot.obj";
+	string _ball = "./res/assets/sphere.obj";
+	string _box = "./res/assets/box.obj";
+	string _torus = "./res/assets/torus.obj";
 
 
 
@@ -600,7 +597,7 @@ int main(int argc, char **argv) {
 	torus->setShine(0.25);
 
 	table = new Geometry(_table);
-	table->loadTexture("work/res/textures/wood.jpg");
+	table->loadTexture("./res/textures/wood.jpg");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
 	table->translate(vec3(0, 0.4, 0));
 	table->setAmbient(vec3(0.21, 0.1275, 0.054));
@@ -609,7 +606,7 @@ int main(int argc, char **argv) {
 	table->setShine(0.78125f);
 
     box = new Geometry(_box);
-	box->loadTexture("work/res/textures/brick.jpg");
+	box->loadTexture("./res/textures/brick.jpg");
 	box->changeScale(vec3(2, 2, 2));
 	box->rotate(vec4(0, 1, 0, 180));
 	box->translate(vec3(-5.5, 2.9, 5.5));

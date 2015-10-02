@@ -39,6 +39,7 @@ private:
 	comp308::vec4 Rotation;
 	comp308::vec3 Translation;
 
+	GLuint g_shader = 0;
 	float mat_ambient[3];
 	float mat_diffuse[3];
 	float mat_specular[3];
@@ -59,7 +60,7 @@ private:
 	GLuint m_displayListWire = 0; // DisplayList for Wireframe
 
 	void readOBJ(std::string);
-
+	void initShader();
 	void createNormals();
 	void setTexture();
 	void createDisplayListPoly();
@@ -69,7 +70,7 @@ public:
 	Geometry(std::string);
 	// ~GeometryManager();
 	void changeScale(comp308::vec3 s);
-	void renderGeometry();
+	void renderGeometry(bool shade);
 	void toggleWireFrame();
 	void loadTexture(std::string s);
 	void rotate(comp308::vec4 r);

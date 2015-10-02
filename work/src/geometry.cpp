@@ -21,6 +21,7 @@
 #include <vector>
 #include <map>
 
+#include "shaderLoader.hpp"
 #include "imageLoader.hpp"
 #include "comp308.hpp"
 #include "geometry.hpp"
@@ -442,7 +443,12 @@ void Geometry::changeScale(comp308::vec3 s)
 	createDisplayListPoly();
 }
 
-void Geometry::renderGeometry()
+void Geometry::initShader() {
+	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+}
+
+
+void Geometry::renderGeometry(bool shade)
 {
     if (m_wireFrameOn)
     {
@@ -462,7 +468,7 @@ void Geometry::renderGeometry()
     }
     else
     {
-
+		
         //-------------------------------------------------------------
         // [Assignment 1] :
         // When moving on to displaying your obj, comment out the
@@ -478,7 +484,14 @@ void Geometry::renderGeometry()
 	// Bind the texture
 
         glBindTexture(GL_TEXTURE_2D, g_texture);
+		if (shade) {
+			//// Use the shader we made
+			glUseProgram(g_shader);
 
+			//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
+			glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
+
+		}
 
         glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
@@ -515,6 +528,7 @@ void Geometry::loadTexture(std::string s)
 {
 	texture = new image(s);
 	setTexture();
+	initShader();
 }
 
 void Geometry::rotate(comp308::vec4 r)
