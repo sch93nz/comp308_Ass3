@@ -324,9 +324,11 @@ void Geometry::setTexture()
 {
 	glActiveTexture(GL_TEXTURE0); // Use slot 0, need to use GL_TEXTURE1 ... etc if using more than one texture PER OBJECT
 	glGenTextures(1, &g_texture); // Generate texture ID
+
 	glBindTexture(GL_TEXTURE_2D, g_texture); // Bind it as a 2D texture
 
-											 // Setup sampling strategies
+
+										 // Setup sampling strategies
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -460,7 +462,7 @@ void Geometry::renderGeometry()
     }
     else
     {
-       
+
         //-------------------------------------------------------------
         // [Assignment 1] :
         // When moving on to displaying your obj, comment out the
@@ -470,20 +472,20 @@ void Geometry::renderGeometry()
 		// Enable Drawing texures
 		glEnable(GL_TEXTURE_2D);
 		// Use Texture as the color
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		// Set the location for binding the texture
 		glActiveTexture(GL_TEXTURE0);
 		// Bind the texture
 
         glBindTexture(GL_TEXTURE_2D, g_texture);
 
-		
-		  glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-		  glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-		  glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-		  glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
 
-		
+        glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+		glMaterialf(GL_FRONT, GL_SHININESS, shine * 128.0);
+
+
 
 		glMatrixMode(GL_MODELVIEW);
 
@@ -496,9 +498,9 @@ void Geometry::renderGeometry()
 		//glutSolidTeapot(5.0);
 		glCallList(m_displayListPoly);
 
-         if(texture!=nullptr){
+
         glDisable(GL_TEXTURE_2D);
-        }
+
 		glPopMatrix();
     }
 }

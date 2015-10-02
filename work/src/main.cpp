@@ -68,6 +68,11 @@ Geometry *teapot;
 Geometry *torus;
 
 bool light0, light1, light2, light3;
+ float base = 1;
+ float cutoff= 45.0f;
+GLfloat lightPos[] = { 0.0f, 10.0f, 0.0f, 0.0f };
+GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
+
 
 // Sets up where and what the light is
 // Called once on start up
@@ -75,7 +80,7 @@ bool light0, light1, light2, light3;
 void initLight() {
 
 
-    float direction[]	  = {4.0f, 5.0f, 0.0f, 0.0f};
+    float direction[]	  = {0.0f, 5.0f, 0.0f, 0.0f};
     float diffintensity[] = {0.1f, 0.4f, 0.1f, 1.0f};
     float ambient[]       = {0.05f, 0.1f, 0.05f, 1.0f};
 
@@ -83,26 +88,25 @@ void initLight() {
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
     glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
 
-	
-    GLfloat  lightPos[] = { 0.0f, 5.0f, 0.0f, 0.0f };
-    GLfloat  specular[] = { 1.0f, 1.0f, 10.0f, 1.0f};
-    GLfloat  specref[] =  { 0.1f, 0.1f, 1.0f, 1.0f };
-    GLfloat  ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f};
-    GLfloat  spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
-	GLfloat spotDiffintensity[] = { 0.0f,0.0f,1.0f,1.0f };
+    GLfloat specular[] = { 1.0f, 1.0f, 10.0f, 1.0f};
+    GLfloat ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat spotDiffintensity[] = { 0.0f,0.0f,1.0f,1.0f };
 
-	glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
+	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
     glLightfv(GL_LIGHT1,GL_DIFFUSE, spotDiffintensity);
     glLightfv(GL_LIGHT1,GL_SPECULAR,specular);
     glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
+
     // Specific spot effects
     // Cut off angle is 60 degrees
-    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,30.0f);
+    glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,cutoff);
+
+    base =(tan(radians(cutoff))*2);
 
     // Fairly shiny spot
     glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,100.0f);
-	
+
 	float diffintensity2[] = { 0.4f, 0.2f, 0.2f, 1.0f };
 	float ambient2[] = { 0.2f, 0.1f, 0.1f, 1.0f };
 	float direction2[] = { -10.0f, 2.5f,0.0f, 1.0f };
@@ -113,16 +117,16 @@ void initLight() {
 
 	float diffintensity3[] = { 0.15f, 0.15f, 0.15f, 1.0f };
 	float ambient3[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-	
+
 	glLightfv(GL_LIGHT3, GL_DIFFUSE, diffintensity3);
 	glLightfv(GL_LIGHT3, GL_AMBIENT, ambient3);
 
 
     // Enable this light in particular
-   
+
     glEnable(GL_LIGHT0); // Weak point
 	light0 = true;
-	
+
 	glEnable(GL_LIGHT1); //Strong Spot
 	light1 = true;
 
@@ -133,15 +137,8 @@ void initLight() {
 	light3 = true;
 }
 
-
-
-
-
-
-
-
 void initShader() {
-	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
 }
 
 
@@ -173,6 +170,7 @@ void draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
+
 	// Enable flags for normal rendering
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
@@ -180,30 +178,57 @@ void draw() {
 
 	setUpCamera();
 
+    glPushMatrix();
+
+    glTranslatef(lightPos[0],lightPos[1],lightPos[2]);
+    glDisable(GL_LIGHTING);
+    glColor3f(0.0,1.0,1.0);
+    glRotatef(90,-1.0f,0.0f,0.0f);
+    glRotatef(1.0,spotDir[0],spotDir[1],spotDir[2]);
+
+
+
+    glutSolidCone(base*2,2,100,100);
+
+    //glColor3f(1.0,0,1.0);
+    glTranslatef(0,0,-5);
+
+    glEnable(GL_LIGHTING);
+    glPopMatrix();
+
+
 
 	// Without shaders
 	//
 	if (!g_useShader) {
 
 
-	glPushMatrix();
-		box->renderGeometry();
-			glPopMatrix();
-			glPushMatrix();
+		glPushMatrix();
 		bunny->renderGeometry();
 		glPopMatrix();
-			glPushMatrix();
-		table->renderGeometry();
-		glPopMatrix();
-			glPushMatrix();
+
+
+		glPushMatrix();
 		torus->renderGeometry();
 		glPopMatrix();
-			glPushMatrix();
+
+		glPushMatrix();
 		ball->renderGeometry();
 		glPopMatrix();
-			glPushMatrix();
+
+        glPushMatrix();
 		teapot->renderGeometry();
         glPopMatrix();
+
+        glPushMatrix();
+		table->renderGeometry();
+		glPopMatrix();
+
+        glPushMatrix();
+		box->renderGeometry();
+		glPopMatrix();
+
+
 		glFlush();
 
 	// With shaders (no lighting)
@@ -213,36 +238,44 @@ void draw() {
 		//// Texture setup
 		////
 
-		//// Enable Drawing texures
+		//Enable Drawing texures
 		//glEnable(GL_TEXTURE_2D);
 		//// Set the location for binding the texture
 		//glActiveTexture(GL_TEXTURE0);
 		//// Bind the texture
 		//glBindTexture(GL_TEXTURE_2D, g_texture);
-
+        glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
 		//// Use the shader we made
 		glUseProgram(g_shader);
 
 		//// Set our sampler (texture0) to use GL_TEXTURE0 as the source
 		glUniform1i(glGetUniformLocation(g_shader, "texture0"), 0);
-		glPushMatrix();
-		box->renderGeometry();
-			glPopMatrix();
-			glPushMatrix();
-		bunny->renderGeometry();
-		glPopMatrix();
-			glPushMatrix();
+
+        glPushMatrix();
 		table->renderGeometry();
 		glPopMatrix();
-			glPushMatrix();
+
+		glPushMatrix();
+		box->renderGeometry();
+		glPopMatrix();
+
+		glPushMatrix();
+		bunny->renderGeometry();
+		glPopMatrix();
+
+
+		glPushMatrix();
 		torus->renderGeometry();
 		glPopMatrix();
-			glPushMatrix();
+
+		glPushMatrix();
 		ball->renderGeometry();
 		glPopMatrix();
-			glPushMatrix();
+
+		glPushMatrix();
 		teapot->renderGeometry();
         glPopMatrix();
+
 		glFlush();
 
 		//// Render a single square as our geometry
@@ -338,6 +371,47 @@ void keyboardCallback(unsigned char key, int x, int y) {
 			light3 = true;
 		}
 	}
+	//GLfloat lightPos[] = { 0.0f, 5.0f, 0.0f, 0.0f };
+    //GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
+	if(key=='w'){
+
+	lightPos[2]=lightPos[2]-1.0f;
+	cout << lightPos[2]<<"\n";
+	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
+	}else if(key=='s'){
+
+	lightPos[2]=lightPos[2]+1.0f;
+	cout << lightPos[2]<<"\n";
+	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
+	}
+
+	if(key=='a'){
+
+	lightPos[0]=lightPos[0]-1.0f;
+	cout << lightPos[0]<<"\n";
+	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
+	}else if(key=='d'){
+
+	lightPos[0]=lightPos[0]+1.0f;
+	cout << lightPos[0]<<"\n";
+	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
+	}
+
+	if (key=='+'&&cutoff<90.0f){
+	cutoff++;
+    base = (tan(radians(cutoff))*2);
+    cout << base<<"\t"<<cutoff << "\n";
+      glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,cutoff);
+	}else if (key=='-'&&cutoff>0){
+	cutoff--;
+    base = (tan(radians(cutoff))*2);
+
+    cout << base<<"\t"<<cutoff << "\n";
+      glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,cutoff);
+	}
+
+    //101, 103
+    //100, 102
 	// YOUR CODE GOES HERE
 	// ...
 }
@@ -453,30 +527,21 @@ int main(int argc, char **argv) {
 	initShader();
 
 
-	string _table = "./res/assets/table.obj";
-	string _bunny = "./res/assets/bunny.obj";
-	string _teapot = "./res/assets/teapot.obj";
-	string _ball = "./res/assets/sphere.obj";
-	string _box = "./res/assets/box.obj";
-	string _torus = "./res/assets/torus.obj";
+	string _table = "work/res/assets/table.obj";
+	string _bunny = "work/res/assets/bunny.obj";
+	string _teapot = "work/res/assets/teapot.obj";
+	string _ball = "work/res/assets/sphere.obj";
+	string _box = "work/res/assets/box.obj";
+	string _torus = "work/res/assets/torus.obj";
 
-	table = new Geometry(_table);
-	table->loadTexture("./res/textures/wood.jpg");
-	table->changeScale(vec3(1.2, 1.2, 1.2));
-	table->translate(vec3(0, 0.4, 0));
-	table->setAmbient(vec3(0.21, 0.1275, 0.054));
-	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
-	table->setSpecular(vec3(0.393548,0.271906,0.166721));
-	table->setShine(0.78125f);
-	
+
+
 	bunny = new Geometry(_bunny);
 	bunny->translate(vec3(0, 0.95, 0));
 	bunny->setAmbient(vec3(0.25,0.20725,0.20725));
 	bunny->setDiffuse(vec3(1,0.829,0.829));
 	bunny->setSpecular(vec3(0.296648,0.296648,0.296648));
 	bunny->setShine(0.088);
-
-	//bunny->rotate(vec4(0, 1, 0, 180));
 
 	teapot = new Geometry(_teapot);
 	teapot->translate(vec3(-5.5, 0.9, -5.5));
@@ -492,11 +557,6 @@ int main(int argc, char **argv) {
 	ball->setSpecular(vec3(0.393548,0.271906,0.166721));
 	ball->setShine(0.2);
 
-	box = new Geometry(_box);
-	box->loadTexture("./res/textures/brick.jpg");
-	box->changeScale(vec3(2, 2, 2));
-	box->rotate(vec4(0, 1, 0, 180));
-	box->translate(vec3(-5.5, 2.9, 5.5));
 
 	torus = new Geometry(_torus);
 	torus->translate(vec3(5.5, 1.4, 5.5));
@@ -504,6 +564,22 @@ int main(int argc, char **argv) {
 	torus->setDiffuse(vec3(0.5,0.0,0.0));
 	torus->setSpecular(vec3(0.7,0.6,0.6));
 	torus->setShine(0.25);
+
+	table = new Geometry(_table);
+	table->loadTexture("work/res/textures/wood.jpg");
+	table->changeScale(vec3(1.2, 1.2, 1.2));
+	table->translate(vec3(0, 0.4, 0));
+	table->setAmbient(vec3(0.21, 0.1275, 0.054));
+	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
+	table->setSpecular(vec3(0.393548,0.271906,0.166721));
+	table->setShine(0.78125f);
+
+    box = new Geometry(_box);
+	box->loadTexture("work/res/textures/brick.jpg");
+	box->changeScale(vec3(2, 2, 2));
+	box->rotate(vec4(0, 1, 0, 180));
+	box->translate(vec3(-5.5, 2.9, 5.5));
+
 	// Loop required by GLUT
 	// This will not return until we tell GLUT to finish
 	glutMainLoop();
