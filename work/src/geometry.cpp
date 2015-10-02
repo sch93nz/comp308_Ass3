@@ -468,14 +468,14 @@ void Geometry::renderGeometry()
         // When moving on to displaying your obj, comment out the
         // glutWireTeapot function & uncomment the glCallList function
         //-------------------------------------------------------------
-		glPushMatrix();
-		// Enable Drawing texures
-		glEnable(GL_TEXTURE_2D);
-		// Use Texture as the color
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-		// Set the location for binding the texture
-		glActiveTexture(GL_TEXTURE0);
-		// Bind the texture
+	glPushMatrix();
+	// Enable Drawing texures
+	glEnable(GL_TEXTURE_2D);
+	// Use Texture as the color
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	// Set the location for binding the texture
+	glActiveTexture(GL_TEXTURE0);
+	// Bind the texture
 
         glBindTexture(GL_TEXTURE_2D, g_texture);
 

@@ -67,11 +67,12 @@ Geometry *table;
 Geometry *teapot;
 Geometry *torus;
 
-bool light0, light1, light2, light3;
+bool light0 =true, light1 =true, light2=true, light3=true;
  float base = 1;
  float cutoff= 45.0f;
-GLfloat lightPos[] = { 0.0f, 10.0f, 0.0f, 0.0f };
-GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
+
+ GLfloat lightPos[] = { 0.0f, 10.0f, 0.0f, 1.0f };
+
 
 
 // Sets up where and what the light is
@@ -80,23 +81,25 @@ GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
 void initLight() {
 
 
-    float direction[]	  = {0.0f, 5.0f, 0.0f, 0.0f};
-    float diffintensity[] = {0.1f, 0.4f, 0.1f, 1.0f};
+    float direction[]	  = {0.0f, 0.0f, 0.0f, 1.0f};
+    float diff[] = {0.5f, 0.8f, 0.5f, 1.0f};
     float ambient[]       = {0.05f, 0.1f, 0.05f, 1.0f};
-
+    GLfloat specular[] = { 0.05f, 0.2f, 0.05f, 1.0f};
+    
     glLightfv(GL_LIGHT0, GL_POSITION, direction);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  diffintensity);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  diff);
     glLightfv(GL_LIGHT0, GL_AMBIENT,  ambient);
-
-    GLfloat specular[] = { 1.0f, 1.0f, 10.0f, 1.0f};
+    glLightfv(GL_LIGHT0,GL_SPECULAR,specular);
+    
+    //GLfloat specular[] = { 5.0f, 5.0f, 10.0f, 1.0f};
     GLfloat ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f};
-    GLfloat spotDiffintensity[] = { 0.0f,0.0f,1.0f,1.0f };
-
+    GLfloat spotDiff[] = { 5.0f,5.0f,10.0f,1.0f };
+    GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 0.0 };
 	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
-    glLightfv(GL_LIGHT1,GL_DIFFUSE, spotDiffintensity);
-    glLightfv(GL_LIGHT1,GL_SPECULAR,specular);
+    glLightfv(GL_LIGHT1,GL_DIFFUSE, spotDiff);
+    //glLightfv(GL_LIGHT1,GL_SPECULAR,specular);
     glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
+    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDir);
 
     // Specific spot effects
     // Cut off angle is 60 degrees
@@ -105,36 +108,52 @@ void initLight() {
     base =(tan(radians(cutoff))*2);
 
     // Fairly shiny spot
-    glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,100.0f);
+    glLightf(GL_LIGHT1,GL_SPOT_EXPONENT,5.0f);
 
 	float diffintensity2[] = { 0.4f, 0.2f, 0.2f, 1.0f };
 	float ambient2[] = { 0.2f, 0.1f, 0.1f, 1.0f };
-	float direction2[] = { -10.0f, 2.5f,0.0f, 1.0f };
+	float direction2[] = { -10.0f, 2.5f,0.0f, 0.0f };
 
 	glLightfv(GL_LIGHT2, GL_POSITION, direction2);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffintensity2);
 	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient2);
-
-	float diffintensity3[] = { 0.15f, 0.15f, 0.15f, 1.0f };
-	float ambient3[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	glLightf(GL_LIGHT2,GL_CONSTANT_ATTENUATION,6.0f);
+	float diffintensity3[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+	float ambient3[] = { 0.6f, 0.6f, 0.6f, 1.0f };
 
 	glLightfv(GL_LIGHT3, GL_DIFFUSE, diffintensity3);
 	glLightfv(GL_LIGHT3, GL_AMBIENT, ambient3);
 
 
     // Enable this light in particular
+		if (!light0) {
+			glDisable(GL_LIGHT0);
+		}
+		else {
+			glEnable(GL_LIGHT0);
+		}
+		if (!light1) {
+			glDisable(GL_LIGHT1);
 
-    glEnable(GL_LIGHT0); // Weak point
-	light0 = true;
+		}
+		else {
+			glEnable(GL_LIGHT1);
+		}if (!light2) {
+			glDisable(GL_LIGHT2);
 
-	glEnable(GL_LIGHT1); //Strong Spot
-	light1 = true;
+		}
+		else {
+			glEnable(GL_LIGHT2);
 
-	glEnable(GL_LIGHT2);//direction light
-	light2 = true;
+		}if (!light3) {
+			glDisable(GL_LIGHT3);
 
-	glEnable(GL_LIGHT3); //soft ambo light
-	light3 = true;
+		}
+		else {
+			glEnable(GL_LIGHT3);
+
+		}
+    
 }
 
 void initShader() {
@@ -164,7 +183,7 @@ void setUpCamera() {
 // Draw function
 //
 void draw() {
-
+	initLight();
 	// Black background
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -177,25 +196,24 @@ void draw() {
 	glEnable(GL_NORMALIZE);
 
 	setUpCamera();
-
+    if(light1){
     glPushMatrix();
-
+    glMatrixMode(GL_MODELVIEW);
+   
     glTranslatef(lightPos[0],lightPos[1],lightPos[2]);
     glDisable(GL_LIGHTING);
     glColor3f(0.0,1.0,1.0);
     glRotatef(90,-1.0f,0.0f,0.0f);
-    glRotatef(1.0,spotDir[0],spotDir[1],spotDir[2]);
+   
 
+    glutSolidCone(base,2,100,100);
 
-
-    glutSolidCone(base*2,2,100,100);
-
-    //glColor3f(1.0,0,1.0);
-    glTranslatef(0,0,-5);
-
+    
     glEnable(GL_LIGHTING);
     glPopMatrix();
-
+    
+    
+    }
 
 
 	// Without shaders
@@ -331,43 +349,36 @@ void reshape(int w, int h) {
 //
 void keyboardCallback(unsigned char key, int x, int y) {
 	cout << "Keyboard Callback :: key=" << key << ", x,y=(" << x << "," << y << ")" << endl;
+	
 	if (key == '1') {
 		if (light0) {
-			glDisable(GL_LIGHT0);
 			light0 = false;
 		}
 		else {
-			glEnable(GL_LIGHT0);
 			light0 = true;
 		}
 	}
 	else if (key == '2') {
 		if (light1) {
-			glDisable(GL_LIGHT1);
 			light1 = false;
 		}
 		else {
-			glEnable(GL_LIGHT1);
 			light1 = true;
 		}
 	}
 	else if (key == '3') {
 		if (light2) {
-			glDisable(GL_LIGHT2);
 			light2 = false;
 		}
 		else {
-			glEnable(GL_LIGHT2);
 			light2 = true;
 		}
 	}
 	else if (key == '4') {
 		if (light3) {
-			glDisable(GL_LIGHT3);
 			light3 = false;
 		}
 		else {
-			glEnable(GL_LIGHT3);
 			light3 = true;
 		}
 	}
@@ -397,19 +408,24 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
 	}
 
-	if (key=='+'&&cutoff<90.0f){
+	if (key=='+'){
 	cutoff++;
-    base = (tan(radians(cutoff))*2);
-    cout << base<<"\t"<<cutoff << "\n";
+	if(cutoff<75.0f){
+	  base = (tan(radians(cutoff))*2);
+	  cout << base<<"\t"<<cutoff << "\n";
+	}
       glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,cutoff);
 	}else if (key=='-'&&cutoff>0){
 	cutoff--;
-    base = (tan(radians(cutoff))*2);
-
-    cout << base<<"\t"<<cutoff << "\n";
+	if(cutoff<75.0f){
+	base = (tan(radians(cutoff))*2);
+	cout << base<<"\t"<<cutoff << "\n";
+	}
       glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,cutoff);
 	}
 
+	if(key==27)exit(0);
+	
     //101, 103
     //100, 102
 	// YOUR CODE GOES HERE
