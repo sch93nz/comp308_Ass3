@@ -72,7 +72,7 @@ bool light0 =true, light1 =true, light2=true, light3=true;
  float cutoff= 45.0f;
 
  GLfloat lightPos[] = { 0.0f, 10.0f, 0.0f, 1.0f };
-
+  GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 0.0 };
 
 
 // Sets up where and what the light is
@@ -94,7 +94,7 @@ void initLight() {
     //GLfloat specular[] = { 5.0f, 5.0f, 10.0f, 1.0f};
     GLfloat ambientLight[] = { 0.0f, 0.0f, 0.0f, 1.0f};
     GLfloat spotDiff[] = { 5.0f,5.0f,10.0f,1.0f };
-    GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 0.0 };
+    
 	//glLightfv(GL_LIGHT1, GL_AMBIENT, ambientLight);
     glLightfv(GL_LIGHT1,GL_DIFFUSE, spotDiff);
     //glLightfv(GL_LIGHT1,GL_SPECULAR,specular);
@@ -204,9 +204,9 @@ void draw() {
     glDisable(GL_LIGHTING);
     glColor3f(0.0,1.0,1.0);
     glRotatef(90,-1.0f,0.0f,0.0f);
-   
+    //glRotatef(1,spotDir[0],spotDir[1],spotDir[2]);
 
-    glutSolidCone(base,2,100,100);
+    glutWireCone(base,2,100,100);
 
     
     glEnable(GL_LIGHTING);
@@ -386,24 +386,24 @@ void keyboardCallback(unsigned char key, int x, int y) {
     //GLfloat spotDir[] = { 0.0f, -1.0f, 0.0f, 1.0f };
 	if(key=='w'){
 
-	lightPos[2]=lightPos[2]-1.0f;
+	lightPos[2]=lightPos[2]-0.5f;
 	cout << lightPos[2]<<"\n";
 	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
 	}else if(key=='s'){
 
-	lightPos[2]=lightPos[2]+1.0f;
+	lightPos[2]=lightPos[2]+0.5f;
 	cout << lightPos[2]<<"\n";
 	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
 	}
 
 	if(key=='a'){
 
-	lightPos[0]=lightPos[0]-1.0f;
+	lightPos[0]=lightPos[0]-0.5f;
 	cout << lightPos[0]<<"\n";
 	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
 	}else if(key=='d'){
 
-	lightPos[0]=lightPos[0]+1.0f;
+	lightPos[0]=lightPos[0]+0.5f;
 	cout << lightPos[0]<<"\n";
 	 glLightfv(GL_LIGHT1,GL_POSITION,lightPos);
 	}
@@ -423,7 +423,25 @@ void keyboardCallback(unsigned char key, int x, int y) {
 	}
       glLightf(GL_LIGHT1,GL_SPOT_CUTOFF,cutoff);
 	}
-
+	cout << (int)key<<"\n";
+	if(key=='o'){
+	 //move um in z 
+	  
+	  spotDir[2]=spotDir[2]-0.1f;
+	}else if(key=='l'){
+	 //move down in z 
+	  spotDir[2]=spotDir[2]+0.1f;
+	}
+	
+	if(key== 'k'){
+	  //move up in x
+	  spotDir[0]=spotDir[0]-0.1f;
+	} else if(key==';'){
+	 //move down in x 
+	  spotDir[0]=spotDir[0]+0.1f;
+	}
+	
+	
 	if(key==27)exit(0);
 	
     //101, 103
