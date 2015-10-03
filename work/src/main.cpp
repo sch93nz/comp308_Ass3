@@ -558,12 +558,12 @@ int main(int argc, char **argv) {
 	//initShader();
 
 
-	string _table = "./res/assets/table.obj";
-	string _bunny = "./res/assets/bunny.obj";
-	string _teapot = "./res/assets/teapot.obj";
-	string _ball = "./res/assets/sphere.obj";
-	string _box = "./res/assets/box.obj";
-	string _torus = "./res/assets/torus.obj";
+	string _table = "work/res/assets/table.obj";
+	string _bunny = "work/res/assets/bunny.obj";
+	string _teapot = "work/res/assets/teapot.obj";
+	string _ball = "work/res/assets/sphere.obj";
+	string _box = "work/res/assets/box.obj";
+	string _torus = "work/res/assets/torus.obj";
 
 
 
@@ -597,16 +597,16 @@ int main(int argc, char **argv) {
 	torus->setShine(0.25);
 
 	table = new Geometry(_table);
-	table->loadTexture("./res/textures/wood.jpg");
+	table->loadTexture("work/res/textures/wood.jpg");
 	table->changeScale(vec3(1.2, 1.2, 1.2));
-	table->translate(vec3(0, 0.4, 0));
-	table->setAmbient(vec3(0.21, 0.1275, 0.054));
-	table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
-	table->setSpecular(vec3(0.393548,0.271906,0.166721));
-	table->setShine(0.78125f);
+	//table->translate(vec3(0, 0.4, 0));
+	//table->setAmbient(vec3(0.21, 0.1275, 0.054));
+	//table->setDiffuse(vec3(0.715, 0.4284, 0.18144));
+	//table->setSpecular(vec3(0.393548,0.271906,0.166721));
+	//table->setShine(0.78125f);
 
     box = new Geometry(_box);
-	box->loadTexture("./res/textures/brick.jpg");
+	box->loadTexture("work/res/textures/brick.jpg");
 	box->changeScale(vec3(2, 2, 2));
 	box->rotate(vec4(0, 1, 0, 180));
 	box->translate(vec3(-5.5, 2.9, 5.5));

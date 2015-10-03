@@ -35,17 +35,17 @@ using namespace comp308;
 Geometry::Geometry(string filename)
 {
 	Scale = vec3(1.0, 1.0, 1.0);
-	mat_ambient[0]=1;
-	mat_ambient[1]=1;
-	mat_ambient[2]=1;
+	mat_ambient[0]=0.2f;
+	mat_ambient[1] = 0.2f;
+	mat_ambient[2]=0.2f;
 
-	mat_diffuse[0]=1;
-	mat_diffuse[1]=1;
-	mat_diffuse[2]=1;
+	mat_diffuse[0]=00.8f;
+	mat_diffuse[1]=0.8f;
+	mat_diffuse[2]=0.8f;
 
-	mat_specular[0]=1;
-	mat_specular[1]=1;
-	mat_specular[2]=1;
+	mat_specular[0]=0.0f;
+	mat_specular[1] = 0.0f;
+	mat_specular[2]=0.0f;
 
     m_filename = filename;
     readOBJ(filename);
