@@ -26,7 +26,8 @@
 //	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
 //}
 
-
+// i got this off the internet i was hoping to  use it to figure out how everything
+//worked but i didn't not get to the point of implementing anything of my own.
 varying vec3 N;
 varying vec3 v;
 varying vec2 vTextureCoord0;

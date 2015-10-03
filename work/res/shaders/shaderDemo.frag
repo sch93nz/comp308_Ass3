@@ -27,6 +27,10 @@
 	
 //	gl_FragColor = texture2D(texture0, vTextureCoord0);
 //}
+
+// i got this off the internet i was hoping to  use it to figure out how everything
+//worked but i didn't not get to the point of implementing anything of my own.
+
 uniform sampler2D texture0;
 varying vec3 N;
 varying vec3 v;   
