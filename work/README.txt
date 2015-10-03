@@ -1,7 +1,7 @@
 COMP308 Assignment 3
 
-Name ::
-Student ID ::
+Name :: Matthew Schmidt
+Student ID :: 300235737
 
 
 1) List what you have completed:
