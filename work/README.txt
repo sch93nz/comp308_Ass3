@@ -21,4 +21,4 @@ the textures and the meterial properties, the four lights and i attempted to imp
 	Esc kills the program.
 	
 3) How to run your code, if it differs from the original assignment:
- normally everything should be hard coded and i think i took care of the problem with the locations on the ecs machines being different to my windows machine.
+ normally everything should be hard coded and i think i took care of the problem with the locations on the ecs machines being different to my windows machine and i have just checked if it compiles on the ecs machines.

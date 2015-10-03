@@ -444,7 +444,7 @@ void Geometry::changeScale(comp308::vec3 s)
 }
 
 void Geometry::initShader() {
-	g_shader = makeShaderProgram("./res/shaders/shaderDemo.vert", "./res/shaders/shaderDemo.frag");
+	g_shader = makeShaderProgram("work/res/shaders/shaderDemo.vert", "work/res/shaders/shaderDemo.frag");
 }
 
 
